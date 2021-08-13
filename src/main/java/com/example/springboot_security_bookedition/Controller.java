@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.naming.Binding;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
@@ -18,17 +19,17 @@ public class Controller {
     UserRepo userRepo;
 
     @Autowired
+    TeamRepo teamRepo;
+
+    @Autowired
+    PlayerRepo playerRepo;
+
+    @Autowired
     RoleRepo roleRepo;
 
     @Autowired
     CloudinaryConfig cloudc;
 
-    @RequestMapping("/secure")
-    public String secure(Principal principal, Model model){
-        String username = principal.getName();
-        model.addAttribute("user", userRepo.findByUsername(username));
-        return "secure";
-    }
 
     @GetMapping("/register")
     public String showRegistrationPage(Model model){
@@ -52,37 +53,107 @@ public class Controller {
         }
         return "index";
     }
-    @RequestMapping("/")
-    public String listActors(){
+
+
+    @RequestMapping("/home")
+    public String home(){
         return "index";
+    }
+    @RequestMapping("/teams")
+    public String teams(Model model){
+        model.addAttribute("teams", teamRepo.findAll());
+        return "teams";
+    }
+    @RequestMapping("/players")
+    public String players(Model model){
+        model.addAttribute("team", new Team());
+        model.addAttribute("players", playerRepo.findAll());
+        model.addAttribute("teams", teamRepo.findAll());
+        return "players";
     }
 
 
-//    @PostMapping("/add")
-//    public String processActor(@ModelAttribute Actor actor,
-//                               @RequestParam("file") MultipartFile file){
-//        if(file.isEmpty()){
-//            return "redirect:/add";
-//        }
-//        try{
-//            Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-//            actor.setPhoto(uploadResult.get("url").toString());
-//            actorRepo.save(actor);
-//        }catch(IOException e){
-//            e.printStackTrace();
-//            return "redirect:/add";
-//        }
-//        return "redirect:/";
-//    }
+    @GetMapping("/addTeam")
+    public String addTeam(Model model){
+        model.addAttribute("team", new Team());
+        return "teamForm";
+    }
+
+    @RequestMapping("/updateTeam/{id}")
+    public String updateTeam(@PathVariable("id") long id, Model model){
+        model.addAttribute("team", teamRepo.findById(id).get());
+        return "teamForm";
+    }
+    @RequestMapping("/deleteTeam/{id}")
+    public String deleteTeam(@PathVariable("id") long id){
+        teamRepo.deleteById(id);
+        return "redirect:/teams";
+    }
+
+    @PostMapping("/processTeam")
+    public String processTeam(@Valid Team team, BindingResult result){
+        if(result.hasErrors()){
+            return "teamForm";
+        }
+        teamRepo.save(team);
+        return "redirect:/teams";
+    }
+
+
+    @GetMapping("/addPlayer")
+    public String addPlayer(Model model){
+        model.addAttribute("player", new Player());
+        model.addAttribute("teams", teamRepo.findAll());
+        return "playerForm";
+    }
+
+    @RequestMapping("/updatePlayer/{id}")
+    public String updatePlayer(@PathVariable("id") long id, Model model){
+        model.addAttribute("teams", teamRepo.findAll());
+        model.addAttribute("player", playerRepo.findById(id).get());
+        return "playerForm";
+    }
+    @RequestMapping("/detailPlayer/{id}")
+    public String detailPlayer(@PathVariable("id") long id, Model model){
+        model.addAttribute("player", new Player());
+        model.addAttribute("player", playerRepo.findById(id).get());
+        return "processPlayer";
+    }
+    @RequestMapping("/deletePlayer/{id}")
+    public String deletePlayer(@PathVariable("id") long id){
+        playerRepo.deleteById(id);
+        return "redirect:/players";
+    }
+
+    @PostMapping("processPlayer")
+    public String processPlayer(@Valid Player player, BindingResult result, @RequestParam(name = "playerImg")MultipartFile file){
+        if(result.hasErrors()){
+            return "playerForm";
+        }
+        else{
+            if(file.isEmpty() && (player.getPhoto() == null || player.getPhoto().isEmpty())){
+                player.setPhoto("https://res.cloudinary.com/jabiremeka/image/upload/v1628774866/1200px-Question_Mark.svg_v72lrj.png");
+            }
+            else if(!file.isEmpty()){
+                try{
+                    Map uploadResult = cloudc.upload(file.getBytes(), ObjectUtils.asMap("resourceType", "auto"));
+                    player.setPhoto(uploadResult.get("url").toString());
+                }catch(IOException e){
+                    e.printStackTrace();
+                    return "redirect:/addPlayer";
+                }
+            }
+        }
+        playerRepo.save(player);
+        return "processPlayer";
+    }
+
 
     @RequestMapping("/login")
     public String login(){return "login";}
-
-    @RequestMapping("/admin")
-    public String admin(){return "admin";}
-
     @RequestMapping("/logout")
     public String logout(){
         return "redirect:/login?logout=true";
     }
 }
+

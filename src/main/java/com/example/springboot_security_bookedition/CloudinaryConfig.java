@@ -37,8 +37,9 @@ public class CloudinaryConfig {
                             int height, String action){
         return cloudinary.url()
                 .transformation(new Transformation()
-                .width(width).height(height)
-                .border("2px_solid_black").crop(action))
+                        .width(width).height(height)
+                        .border("2px_solid_black").crop(action))
                 .imageTag(name);
     }
 }
+

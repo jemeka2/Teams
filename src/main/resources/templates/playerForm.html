@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Player Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <div th:replace="index :: navbar"></div>
+    <h3>New Player Form</h3>
+    <form th:action="@{/processPlayer}" th:object="${player}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+        <input type="hidden" th:field="*{photo}">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th scope="row">First Name</th>
+                <td>
+                    <input type="text" th:field="*{fName}">
+                    <mark>
+                        <strong>
+                            <span th:if="${#fields.hasErrors('fName')}" th:errors="*{fName}"></span>
+                        </strong>
+                    </mark>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Last Name</th>
+                <td>
+                    <input type="text" th:field="*{lName}">
+                    <mark>
+                        <strong>
+                            <span th:if="${#fields.hasErrors('lName')}" th:errors="*{lName}"></span>
+                        </strong>
+                    </mark>
+                </td>
+
+            </tr>
+            <tr>
+                <th scope="row">Age</th>
+                <td>
+                    <input type="number" th:field="*{age}">
+                    <mark>
+                        <strong>
+                            <span th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></span>
+                        </strong>
+                    </mark>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Team</th>
+                <td>
+                    <select th:field="*{team}">
+                        <option th:each="team: ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">Image</th>
+                <td><input type="file" name="playerImg"></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="Add Player">
+    </form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

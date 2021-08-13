@@ -1,19 +1,54 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home Page</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{main.css}">
 </head>
 <body>
-    <h2>Welcome Page</h2>
-    <p th:if="${message}">[[${message}]]</p>
-    <a th:href="@{/admin}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Admin Page</a>
-    <br>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout">
-    </form>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" th:fragment="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/home}">MCSA</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" th:href="@{/home}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/teams}">Teams</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/players}">Player</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAnonymous()">
+                    <a class="nav-link" th:href="@{/login}">Login</a>
+                </li>
+            </ul>
+        </div>
 
+    </div>
+</nav>
+<h1 id="title">Montgomery County Sport Association</h1>
+<br>
+
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://res.cloudinary.com/jabiremeka/image/upload/v1628881534/BOS7LC4CVU4N5OI64RE5G3ZXZ4_e50o17.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="https://res.cloudinary.com/jabiremeka/image/upload/v1628881558/maxresdefault_k0ohdu.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="https://res.cloudinary.com/jabiremeka/image/upload/v1628881584/GIANTS-slide-PAJ0-superJumbo_w5byah.jpg" class="d-block w-100" alt="...">
+        </div>
+    </div>
+</div>
 
 
 

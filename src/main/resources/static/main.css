@@ -1,0 +1,30 @@
+.card{
+    display: flex;
+    width: 400px;
+    margin: auto;
+    border:1px solid lightgrey;
+}
+
+.card img{
+    min-height: 400px;
+
+}
+
+.col{
+    max-width: 400px;
+    min-width: 400px;
+
+}
+
+.add{
+    margin: auto;
+    width: 92.6%;
+}
+#title{
+    margin:auto;
+    padding-left: 31%;
+}
+#carouselExampleSlidesOnly{
+    max-width: 1200px;
+    margin:auto;
+}
